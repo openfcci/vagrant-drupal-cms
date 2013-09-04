@@ -1,0 +1,20 @@
+
+# this is the template for dev sites
+#
+#
+# setup for
+<VirtualHost *:80>
+  ServerName <%= node['drupal']['prefix'] %>.fccnn.com
+  Include /srv/cms/utilities/../wwwconfig/<%= node['drupal']['prefix'] %>.serveraliases
+  Include /srv/cms/utilities/../wwwconfig/rewrites.conf
+  DocumentRoot /srv/cms/utilities/../public_html
+  <Directory /srv/cms/utilities/../public_html>
+    Order allow,deny
+    Allow from all
+    AllowOverride All
+  </Directory>
+
+  # set the newrelic appname for tracking
+  php_value newrelic.appname 'Drupal 7 Dev'
+</VirtualHost>
+

@@ -1,0 +1,1 @@
+default['drupal']['prefix']='vagrant'
