@@ -7,6 +7,48 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'apt'
+# map vm folders onto the settings folders so that the vms aren't limited to one per host.
+
+directory "/usr/local/wwwconfig" do
+  owner 'vagrant'
+  mode '0775'
+end
+
+template "/usr/local/wwwconfig/redirects.conf" do
+  owner 'vagrant'
+  mode '0644'
+end
+
+template '/usr/local/wwwconfig/' + node['drupal']['prefix'] + '.serveraliases' do
+  owner 'vagrant'
+  mode '0644'
+  source 'serveraliases.erb'
+end
+
+file '/usr/local/wwwconfig/rewrites.conf' do
+  owner 'vagrant'
+  mode '0644'
+end
+
+directory "/usr/local/settings_override" do
+  owner 'vagrant'
+  mode '0775'
+end
+
+template "/usr/local/settings_override/settings.php" do
+  owner 'vagrant'
+  mode '0644'
+end
+
+execute "mount-wwwconfig" do
+  command 'mount -o bind /usr/local/wwwconfig/ /srv/cms/wwwconfig/'
+  user 'root'
+end
+
+execute "mount-settings_override" do
+  command 'mount -o bind /usr/local/settings_override/ /srv/cms/public_html/sites/settings_override/'
+  user 'root'
+end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
 'memcached', 'php5-memcached', 'imagemagick', 'php-apc'].each do |requirement|
@@ -41,11 +83,11 @@ execute "install-upload-progress" do
   returns [0,1]
 end
 
+service "apache2"
+
 include_recipe 'apache2'
 include_recipe 'apache2::mod_rewrite'
 include_recipe 'apache2::mod_php5'
-
-service "apache2"
 
 template "/etc/apache2/sites-enabled/drupal.conf" do
   owner 'root'
@@ -75,24 +117,3 @@ file "/etc/php5/conf.d/uploadprogress.ini" do
   notifies :restart, "service[apache2]", :delayed
 end
 
-# map vm folders onto the settings folders so that the vms aren't limited to one per host.
-
-directory "/usr/local/wwwconfig" do
-  owner 'vagrant'
-  mode '0775'
-end
-
-directory "/usr/local/settings_override" do
-  owner 'vagrant'
-  mode '0775'
-end
-
-execute "mount-wwwconfig" do
-  command 'mount -o bind /usr/local/wwwconfig/ /srv/cms/wwwconfig/'
-  user 'root'
-end
-
-execute "mount-settings_override" do
-  command 'mount -o bind /usr/local/settings_override/ /srv/cms/public_html/sites/settings_override/'
-  user 'root'
-end

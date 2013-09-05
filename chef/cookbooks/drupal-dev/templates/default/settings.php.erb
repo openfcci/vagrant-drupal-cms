@@ -1,0 +1,25 @@
+<?php
+  $databases = array (
+    'default' =>
+    array (
+      'default' =>
+      array (
+        'database' => 'vagrant_drupal',
+        'username' => 'vagrant_drupal',
+        'password' => 'vagrant_drupal2k12',
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'driver' => 'mysql',
+        'prefix' => '',
+      ),
+    ),
+
+  );
+  $fcc_settings = array (
+    'default' => array(
+      'default' => array (
+        'prefix' => '<%= node['drupal']['prefix'] %>',
+      ),
+    ),
+  );
+
