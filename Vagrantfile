@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "grahamc-12.04.2"
-  config.vm.box_url = "http://grahamc.com/vagrant/ubuntu-12.04.2-server-amd64-vmware-fusion.box"
+  config.vm.box = "Precise"
+  config.vm.box_url = "http://files.vagrantup.com/precise64_vmware.box"
   config.vm.hostname = "drupal"
   config.vm.network :forwarded_port, guest: 3306, host: 3307
   config.vm.network :private_network, ip: "172.16.0.10"
