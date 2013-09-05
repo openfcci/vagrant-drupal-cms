@@ -12,14 +12,14 @@ Vagrant.configure("2") do |config|
   config.vm.provider "vmware_fusion" do |v|
     v.vmx["memsize"]="4096"
     v.vmx["numvcpus"]="6"
-    v.vmx["displayName"]="DrupalServer"
+    v.vmx["displayName"]="drupal"
   end
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = "chef/cookbooks"
     chef.add_recipe "drupal-dev"
     chef.json = {
       "drupal" => {
-        "prefix" => "brendan"
+        "prefix" => "drupal"
       },
       "mysql" => {
         "server_root_password" => "vagrant_drupal_root_dev",
