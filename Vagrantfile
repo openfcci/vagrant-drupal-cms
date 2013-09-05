@@ -9,8 +9,6 @@ Vagrant.configure("2") do |config|
   config.vm.network :private_network, ip: "172.16.0.10"
   config.vm.synced_folder "../fcc-drupal-cms/", "/srv/cms", :nfs => true, :nfs_version => 3
   config.vm.synced_folder "../database/", "/exports", :nfs => true, :nfs_version => 3
-  config.vm.synced_folder "settings", "/srv/cms/public_html/sites/settings_override/", :nfs => true, :nfs_version => 3
-  config.vm.synced_folder "config", "/srv/cms/wwwconfig", :nfs => true, :nfs_version => 3
   config.vm.provider "vmware_fusion" do |v|
     v.vmx["memsize"]="4096"
     v.vmx["numvcpus"]="6"

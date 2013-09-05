@@ -74,3 +74,25 @@ file "/etc/php5/conf.d/uploadprogress.ini" do
   mode '0644'
   notifies :restart, "service[apache2]", :delayed
 end
+
+# map vm folders onto the settings folders so that the vms aren't limited to one per host.
+
+directory "/usr/local/wwwconfig" do
+  owner 'vagrant'
+  mode '0775'
+end
+
+directory "/usr/local/settings_override" do
+  owner 'vagrant'
+  mode '0775'
+end
+
+execute "mount-wwwconfig" do
+  command 'mount -o bind /usr/local/wwwconfig/ /srv/cms/wwwconfig/'
+  user 'root'
+end
+
+execute "mount-settings_override" do
+  command 'mount -o bind /usr/local/settings_override/ /srv/cms/public_html/sites/settings_override/'
+  user 'root'
+end
