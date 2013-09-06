@@ -25,7 +25,7 @@ template '/usr/local/wwwconfig/' + node['drupal']['prefix'] + '.serveraliases' d
   source 'serveraliases.erb'
 end
 
-file '/usr/local/wwwconfig/rewrites.conf' do
+cookbook_file '/usr/local/wwwconfig/rewrites.conf' do
   owner 'vagrant'
   mode '0644'
 end
@@ -96,21 +96,21 @@ template "/etc/apache2/sites-enabled/drupal.conf" do
   notifies :restart, "service[apache2]", :delayed
 end
 
-file "/etc/php5/conf.d/apc.ini" do
+cookbook_file "/etc/php5/conf.d/apc.ini" do
   owner 'root'
   group 'root'
   mode '0644'
   notifies :restart, "service[apache2]", :delayed
 end
 
-file "/etc/php5/apache2/php.ini" do
+cookbook_file "/etc/php5/apache2/php.ini" do
   owner 'root'
   group 'root'
   mode '0644'
   notifies :restart, "service[apache2]", :delayed
 end
 
-file "/etc/php5/conf.d/uploadprogress.ini" do
+cookbook_file "/etc/php5/conf.d/uploadprogress.ini" do
   owner 'root'
   group 'root'
   mode '0644'
