@@ -14,6 +14,12 @@ Vagrant.configure("2") do |config|
     v.vmx["numvcpus"]="6"
     v.vmx["displayName"]="drupal"
   end
+  config.vm.provider "virtualbox" do |v|
+    override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+    v.customize ["modifyvm", :id, "--memory", "1024"]
+    v.customize ["modifyvm", :id, "--cpus", "4"]
+    v.name = "drupal"
+  end
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = "chef/cookbooks"
     chef.add_recipe "drupal-dev"
