@@ -6,7 +6,7 @@
       array (
         'database' => 'vagrant_drupal',
         'username' => 'vagrant_drupal',
-        'password' => 'vagrant_drupal2k12',
+        'password' => '<%= node['drupal']['db']['password'] %>',
         'host' => '127.0.0.1',
         'port' => '3306',
         'driver' => 'mysql',
