@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "../database/", "/exports", :nfs => true, :nfs_version => 3
   config.vm.provider "vmware_fusion" do |v|
     v.vmx["memsize"]="4096"
-    v.vmx["numvcpus"]="6"
+    v.vmx["numvcpus"]="4"
     v.vmx["displayName"]="drupal"
   end
   config.vm.provider "virtualbox" do |v|
