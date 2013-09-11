@@ -117,3 +117,8 @@ cookbook_file "/etc/php5/conf.d/uploadprogress.ini" do
   notifies :restart, "service[apache2]", :delayed
 end
 
+cookbook_file "/etc/profile.d/drush.sh" do
+  owner 'root'
+  group 'root'
+  mode '755'
+end
