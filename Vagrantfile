@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   end
   config.vm.provider "virtualbox" do |v|
     config.vm.box_url = "http://grahamc.com/vagrant/ubuntu-12.04-omnibus-chef.box"
-    v.customize ["modifyvm", :id, "--memory", "1024"]
+    v.customize ["modifyvm", :id, "--memory", "4096"
     v.customize ["modifyvm", :id, "--cpus", "4"]
     v.name = "drupal"
   end
