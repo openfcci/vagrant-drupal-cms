@@ -1,0 +1,8 @@
+#!/bin/bash
+ARGUMENTS=""
+for i
+do
+  ARGUMENTS="$ARGUMENTS $i"
+done
+export VAGRANT_CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+vagrant ssh -c "cd /srv/cms/public_html && drush $ARGUMENTS"
