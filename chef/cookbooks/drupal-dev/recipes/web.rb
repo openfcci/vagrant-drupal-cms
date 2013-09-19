@@ -51,7 +51,8 @@ execute "mount-settings_override" do
 end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
-'memcached', 'php5-memcached', 'imagemagick', 'php-apc'].each do |requirement|
+'memcached', 'php5-memcached', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless'
+].each do |requirement|
   package requirement
 end
 
