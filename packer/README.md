@@ -8,8 +8,8 @@ with our vagrant.
 First, [install Packer](http://www.packer.io/intro/getting-started/setup.html),
 I would recommend installing it using brew:
 
-  brew tap homebrew/binary
-  brew install packer
+    brew tap homebrew/binary
+    brew install packer
 
 Then simply run `packer build fcc-vagrant.json` and it will build a new vagrant box
 for you. Once it is complete, you can import it directly into vagrant using
