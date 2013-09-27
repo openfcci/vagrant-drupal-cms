@@ -9,45 +9,21 @@
 include_recipe 'apt'
 # map vm folders onto the settings folders so that the vms aren't limited to one per host.
 
-directory "/usr/local/wwwconfig" do
-  owner 'vagrant'
-  mode '0775'
+template "/srv/cms/wwwconfig/redirects.conf" do
+  mode '0666'
 end
 
-template "/usr/local/wwwconfig/redirects.conf" do
-  owner 'vagrant'
-  mode '0644'
-end
-
-template '/usr/local/wwwconfig/' + node['drupal']['prefix'] + '.serveraliases' do
-  owner 'vagrant'
-  mode '0644'
+template '/srv/cms/wwwconfig/' + node['drupal']['prefix'] + '.serveraliases' do
+  mode '0666'
   source 'serveraliases.erb'
 end
 
-cookbook_file '/usr/local/wwwconfig/rewrites.conf' do
-  owner 'vagrant'
-  mode '0644'
+cookbook_file '/srv/cms/wwwconfig/rewrites.conf' do
+  mode '0666'
 end
 
-directory "/usr/local/settings_override" do
-  owner 'vagrant'
-  mode '0775'
-end
-
-template "/usr/local/settings_override/settings.php" do
-  owner 'vagrant'
-  mode '0644'
-end
-
-execute "mount-wwwconfig" do
-  command 'mount -o bind /usr/local/wwwconfig/ /srv/cms/wwwconfig/'
-  user 'root'
-end
-
-execute "mount-settings_override" do
-  command 'mount -o bind /usr/local/settings_override/ /srv/cms/public_html/sites/settings_override/'
-  user 'root'
+template "/srv/cms/public_html/sites/settings_override/settings.php" do
+  mode '0666'
 end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
