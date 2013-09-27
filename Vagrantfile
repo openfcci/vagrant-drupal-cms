@@ -5,8 +5,8 @@ prefix = "drupal"
 ip = "172.16.0.10"
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "Precise"
-  config.vm.box_url = "http://grahamc.com/vagrant/ubuntu-12.04-omnibus-chef.box"
+  config.vm.box = "fcc-vagrant-9-27-13"
+  config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
   config.vm.hostname = prefix
   config.vm.network :forwarded_port, guest: 3306, host: 3307, auto_correct: true
   config.vm.network :private_network, ip: ip
