@@ -1,2 +1,4 @@
 #!/bin/bash
-vagrant ssh -c "drush cc all && sudo service memcached restart"
+CD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+$CD/drush cc all
+vagrant ssh -c "sudo service memcached restart"
