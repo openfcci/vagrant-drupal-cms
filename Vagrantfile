@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 3306, host: 3307, auto_correct: true
   config.vm.network :private_network, ip: ip
   config.vm.synced_folder "../fcc-drupal-cms/", "/srv/cms", :nfs => true, :nfs_version => 3
-  config.vm.synced_folder "../database/", "/exports", :nfs => true, :nfs_version => 3
+  config.vm.synced_folder "database/", "/exports", :nfs => true, :nfs_version => 3
   config.vm.synced_folder "wwwconfig/", "/srv/cms/wwwconfig", :nfs => true
   config.vm.synced_folder "settings_override/", "/srv/cms/public_html/sites/settings_override", :nfs => true
   config.vm.provider "virtualbox" do |v|
