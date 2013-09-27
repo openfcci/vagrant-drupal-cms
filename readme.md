@@ -10,5 +10,10 @@ Once that completes, you'll have a virtual server for the drupal cms running on 
 
 If you need the live database, move the database dump into the database directroy. then the database dump will be available on the box at `/exports`
 
+## Base Box ##
+
+The basebox is custom generated using [packer][3]. The template for packer lives in `packer`, if you care to take a look.
+
 [1]:http://downloads.vagrantup.com
 [2]:https://www.virtualbox.org/wiki/Downloads
+[3]:http://packer.io
