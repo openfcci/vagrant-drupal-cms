@@ -56,6 +56,7 @@
     "post-processors": [
         {
             "type": "vagrant",
+            "keep_input_artifact": true,
             "output": "fcc-vagrant.box"
         }
     ]
