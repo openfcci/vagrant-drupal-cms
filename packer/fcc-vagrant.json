@@ -43,6 +43,7 @@
               "scripts/virtualbox.sh",
               "scripts/chef.sh",
               "scripts/puppet.sh",
+              "scripts/kernel_cleanup.sh",
               "scripts/vm_cleanup.sh"
             ],
             "override": {
