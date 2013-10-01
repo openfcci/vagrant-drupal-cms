@@ -14,6 +14,15 @@ If you need the live database, move the database dump into the database directro
 
 The basebox is custom generated using [packer][3]. The template for packer lives in `packer`, if you care to take a look.
 
+## Cleanup ##
+
+The basebox gets updated periodically and we've choosen to add the new one under a
+new name instead of requiring you to remove the old one to download the new one.
+This means that vagrant will still have old baseboxes on your system. To clean these up:
+
+1. run `vagrant box list`
+2. You can remove all but the most recent one, run `vagrant box delete <basebox> virtualbox`
+
 [1]:http://downloads.vagrantup.com
 [2]:https://www.virtualbox.org/wiki/Downloads
 [3]:http://packer.io
