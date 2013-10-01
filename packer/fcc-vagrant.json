@@ -22,7 +22,10 @@
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
             "ssh_username": "vagrant",
-            "ssh_password": "vagrant"
+            "ssh_password": "vagrant",
+            "vboxmanage": [
+              ["modifyvm", "{{.Name}}", "--ioapic", "on"]
+            ]
         }
     ],
 
