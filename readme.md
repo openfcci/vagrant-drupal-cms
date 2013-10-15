@@ -1,6 +1,6 @@
 ## Usage ##
 
-1. Install [vagrant][1] and [virtualbox][2]
+1. Install [vagrant][1] and [virtualbox][2], any version prior to 4.3 (vagrant currently doesn't work with 4.3).
 2. Install the plugin vagrant-mountcommand `vagrant plugin install vagrant-mountcommand`
 3. You'll need to clone this into the same directory as fcc-drupal-cms. This expects fcc-drupal-cms to be in a directory named fcc-drupal-cms.
 4. cd into this directory
