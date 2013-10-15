@@ -35,4 +35,5 @@ Vagrant.configure("2") do |config|
     }
   end
   config.vm.provision :shell, :inline => 'cd /srv/cms/utilities && echo "n" | ./default_setup.sh'
+  config.mount_commands.command "service apache2 start"
 end
