@@ -3,6 +3,7 @@
 
 prefix = "drupal"
 ip = "172.16.0.10"
+xdebug_port = ""
 
 Vagrant.configure("2") do |config|
   config.vm.box = "fcc-vagrant-10-01-13"
@@ -24,6 +25,9 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "drupal-dev"
     chef.json = {
       "drupal" => {
+        "xdebug" => {
+          "port" => xdebug_port
+        },
         "prefix" => prefix
       },
       "mysql" => {

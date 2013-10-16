@@ -27,7 +27,7 @@ template "/srv/cms/public_html/sites/settings_override/settings.php" do
 end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
-'memcached', 'php5-memcached', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless'
+'memcached', 'php5-memcached', 'php5-xdebug', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless'
 ].each do |requirement|
   package requirement
 end
@@ -98,4 +98,11 @@ cookbook_file "/etc/profile.d/drush.sh" do
   owner 'root'
   group 'root'
   mode '755'
+end
+
+template "/etc/php5/conf.d/xdebug.ini" do
+  owner 'root'
+  group 'root'
+  mode '0644'
+  only_if { node['drupal']['xdebug']['port'] != ''}
 end

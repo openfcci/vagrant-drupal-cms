@@ -1,0 +1,5 @@
+zend_extension=/usr/lib/php5/20090626/xdebug.so
+xdebug.remote_enable = On
+xdebug.remote_handler=dbgp
+xdebug.remote_host = <%= node['drupal']['xdebug']['host'] %>
+xdebug.remote_port = <%= node['drupal']['xdebug']['port'] %>
