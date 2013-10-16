@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
     chef.json = {
       "drupal" => {
         "xdebug" => {
+          "remote_autostart" = 1,
           "port" => xdebug_port
         },
         "prefix" => prefix
