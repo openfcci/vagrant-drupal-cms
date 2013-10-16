@@ -13,7 +13,7 @@ If you need the live database, move the database dump into the database directro
 
 ## Xdebug ##
 
-If you want/need to use xdebug, it will require some setup. You'll need to configure your ide to listen on `172.16.0.1`. You'll also need to set the `xdebug_port` variable in the Vagrantfile to be whatever your ide uses. Finally, you'll need to reprovision your vm, `vagrant provision --provision-with chef_solo` so that it wont run a default build.
+If you want/need to use xdebug, it will require some setup. You'll need to configure your ide to listen on external interfaces. You'll also need to set the `xdebug` variable to `On`. Then setup the variables in the "xdebug" section of the Vagrantfile to be whatever you need for your ide to connect. Finally, you'll need to reprovision your vm, `vagrant provision --provision-with chef_solo` so that it wont run a default build.
 
 ## Base Box ##
 
