@@ -104,6 +104,5 @@ template "/etc/php5/conf.d/xdebug.ini" do
   owner 'root'
   group 'root'
   mode '0644'
-  only_if { node['drupal']['xdebug']['port'] != ''}
   notifies :restart, "service[apache2]", :delayed
 end
