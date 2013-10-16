@@ -3,7 +3,7 @@
 
 prefix = "drupal"
 ip = "172.16.0.10"
-xdebug_port = ""
+xdebug = "Off"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "fcc-vagrant-10-01-13"
@@ -26,8 +26,10 @@ Vagrant.configure("2") do |config|
     chef.json = {
       "drupal" => {
         "xdebug" => {
-          "remote_autostart" = 1,
-          "port" => xdebug_port
+          "enabled" => xdebug,
+          "host" => "10.0.2.2",
+          "port" => "9000",
+          "remote_autostart" => "1"
         },
         "prefix" => prefix
       },
