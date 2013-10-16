@@ -11,6 +11,10 @@ Once that completes, you'll have a virtual server for the drupal cms running on 
 
 If you need the live database, move the database dump into the database directroy. then the database dump will be available on the box at `/exports`
 
+## Xdebug ##
+
+If you want/need to use xdebug, it will require some setup. You'll need to configure your ide to listen on `172.16.0.1`. You'll also need to set the `xdebug_port` variable in the Vagrantfile to be whatever your ide uses. Finally, you'll need to reprovision your vm, `vagrant provision --provision-with chef_solo` so that it wont run a default build.
+
 ## Base Box ##
 
 The basebox is custom generated using [packer][3]. The template for packer lives in `packer`, if you care to take a look.
