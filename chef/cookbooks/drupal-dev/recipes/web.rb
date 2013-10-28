@@ -106,3 +106,9 @@ template "/etc/php5/conf.d/xdebug.ini" do
   mode '0644'
   notifies :restart, "service[apache2]", :delayed
 end
+
+cookbook_file "/home/vagrant/faster_default_build.sh" do
+  owner 'vagrant'
+  group 'vagrant'
+  mode '0755'
+end
