@@ -112,3 +112,9 @@ cookbook_file "/home/vagrant/faster_default_build.sh" do
   group 'vagrant'
   mode '0755'
 end
+
+cookbook_file "/home/vagrant/faster_live_build.sh" do
+  owner 'vagrant'
+  group 'vagrant'
+  mode '0755'
+end
