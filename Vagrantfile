@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-prefix = "drupal"
+prefix = "dev"
 ip = "172.16.0.10"
 xdebug = "Off"
 
