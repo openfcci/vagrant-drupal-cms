@@ -1,11 +1,12 @@
 ## Install ##
 
+Setup boxen from [https://github.com/openfcci/our-boxen][4] or manually install the requirements:
+
 1. Install [vagrant][1] and [virtualbox][2]. If you're on mavericks it will complain about unsigned kexts when you install virtualbox. It appears to work anyways.
 2. Install the plugin vagrant-mountcommand `vagrant plugin install vagrant-mountcommand`
 3. Install the plugin vagrant-cachier `vagrant plugin install vagrant-cachier`
 4. You'll need to clone this into the same directory as fcc-drupal-cms. This expects fcc-drupal-cms to be in a directory named fcc-drupal-cms.
 
-Or setup boxen from [https://github.com/openfcci/our-boxen][4]
 
 ## Usage ##
 
