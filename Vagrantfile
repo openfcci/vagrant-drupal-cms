@@ -6,7 +6,7 @@ ip = "172.16.0.10"
 xdebug = "Off"
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "fcc-vagrant-10-01-13"
+  config.vm.box = "fcc-vagrant-11-15-13"
   config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
   config.vm.hostname = prefix
   config.vm.network :forwarded_port, guest: 3306, host: 3307, auto_correct: true
@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "settings_override/", "/srv/cms/public_html/sites/settings_override", :nfs => true
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "4096"]
-    v.customize ["modifyvm", :id, "--cpus", "4"]
+    v.customize ["modifyvm", :id, "--cpus", "1"]
     v.name = prefix
   end
   config.vm.provision "chef_solo" do |chef|
