@@ -35,18 +35,21 @@ end
 execute "update-pear" do
   command "pear upgrade"
   user "root"
+  not_if { File.exists?('/usr/bin/drush') }
 end
 
 execute "add-pear.drush.org" do
   command "pear channel-discover pear.drush.org"
   user "root"
   returns [0,1]
+  not_if { File.exists?('/usr/bin/drush') }
 end
 
 execute "install-drush" do
   command "pear install drush/drush"
   user "root"
   returns [0,1]
+  not_if { File.exists?('/usr/bin/drush') }
 end
 
 directory "/usr/share/php/drush/lib" do
@@ -58,6 +61,7 @@ execute "install-upload-progress" do
   command "pecl install uploadprogress"
   user "root"
   returns [0,1]
+  not_if { File.exists?('/etc/php5/apache2/uploadprogress.ini') }
 end
 
 service "apache2"
