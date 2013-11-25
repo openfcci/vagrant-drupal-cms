@@ -21,7 +21,7 @@ mysql_database_user 'vagrant_drupal' do
   connection mysql_connection_info
   password node['drupal']['db']['password']
   database_name 'vagrant_drupal'
-  host 'localhost'
+  host node['drupal']['app']['ip']
   privileges [:all]
   action :grant
 end

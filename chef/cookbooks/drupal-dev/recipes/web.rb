@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'apt'
+include_recipe 'mysql::client'
 # map vm folders onto the settings folders so that the vms aren't limited to one per host.
 
 template "/srv/cms/wwwconfig/redirects.conf" do

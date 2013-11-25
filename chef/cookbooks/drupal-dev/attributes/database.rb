@@ -1,6 +1,8 @@
 override['mysql']['bind_address'] = '0.0.0.0'
 default['drupal']['db']['password'] = 'password'
 
+default['drupal']['app']['ip'] = 'localhost'
+
 # Tune mysql for vagrant
 override['mysql']['tunable']['key_buffer_size']='1536M'
 override['mysql']['tunable']['tmp_table_size']='32M'
