@@ -30,12 +30,6 @@ Vagrant.configure("2") do |config|
           "app" => {
             "ip" => ip,
           }
-        },
-        "mysql" => {
-          "server_root_password" => "vagrant_drupal_root_dev",
-          "server_repl_password" => "not_needed_in_dev",
-          "server_debian_password" => "vagrant_drupal_debian_password",
-          "allow_remote_root" => true
         }
       }
     end
@@ -68,7 +62,6 @@ Vagrant.configure("2") do |config|
         }
       }
     end
-    web.vm.provision :shell, :inline => '/home/vagrant/faster_default_build.sh'
 #    web.vm.mount_commands.command "service apache2 start"
   end
 #  config.cache.auto_detect = true
