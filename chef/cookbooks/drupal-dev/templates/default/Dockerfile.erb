@@ -1,0 +1,19 @@
+FROM ubuntu
+
+MAINTAINER Brendan Tobolaski "brendan@tobolaski.com"
+
+# https://github.com/dotcloud/docker/issues/1024
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN ln -s /bin/true /sbin/initctl
+
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+
+RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+
+ADD ./set-access-rights.sh /tmp/set-access-rights.sh
+RUN /bin/sh /tmp/set-access-rights.sh
+
+EXPOSE 3306
+
+CMD ["/usr/sbin/mysqld"]

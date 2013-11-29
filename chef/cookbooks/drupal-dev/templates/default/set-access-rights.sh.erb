@@ -1,0 +1,3 @@
+/usr/sbin/mysqld &
+sleep 5
+echo "CREATE DATABASE vagrant_drupal; GRANT ALL ON vagrant_drupal.* TO vagrant_drupal@'%' IDENTIFIED BY '<%= node['drupal']['db']['password'] %>'; GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'vagrant_drupal_dev' WITH GRANT OPTION; FLUSH PRIVILEGES" | mysql

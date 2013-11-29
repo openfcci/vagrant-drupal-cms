@@ -8,3 +8,22 @@ apt_repository 'docker' do
 end
 
 package 'lxc-docker'
+
+template '/home/vagrant/set-access-rights.sh' do
+  owner 'vagrant'
+  group 'vagrant'
+  mode '0644'
+end
+
+template '/home/vagrant/Dockerfile' do
+  owner 'vagrant'
+  group 'vagrant'
+  mode '0644'
+end
+
+execute "build docker image" do
+  user "vagrant"
+  group "vagrant"
+  cwd "/home/vagrant"
+  command 'sudo docker build -t="mysql/base" .'
+end
