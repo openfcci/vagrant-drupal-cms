@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+require "rubygems"
+require "bundler/setup"
+require "thor"
+
+class Dev < Thor
+  desc "up", "starts vagrant and runs a default build"
+  def build
+    vagrantUp
+    defaultBuild
+  end
+
+  private
+
+    def vagrantUp
+      vagrantStatus = system( "vagrant up --provider virtualbox" )
+      raise Thor::Error "vagrant failed to start" unless vagrantStatus
+    end
+
+    def mysqlStart(name, image = "mysql/base")
+      mysqlStopCurrent
+      mysqlStatus = system( "vagrant ssh db -c 'sudo docker run -d -name=\"#{name}\" -p 172.16.0.11:3306:3306 #{image}'" )
+      raise Thor::Error "mysql failed to start" unless mysqlStatus
+    end
+
+    def mysqlStopCurrent
+      runningContainers = `vagrant ssh db -c 'sudo docker ps' | grep mysqld`
+      containers = runningContainers.scan(/(?mi)^[0-9a-f]+\s/)
+      containers.each do |container|
+        stopContainer container
+      end
+    end
+
+    def defaultBuild
+      newMysql "default"
+      buildStatus = system( "vagrant ssh -c './faster_default_build.sh'")
+      raise Thor::Error "The build failed" unless buildStatus
+      tagContainer "default", "default"
+    end
+
+    def tagContainer(name, tag)
+      #system( "vagrant ssh db -c 'sudo docker rmi #{tag}'" )
+      stopContainer name
+      system( "vagrant ssh db -c 'sudo ./commit.sh  #{name} #{tag}'" )
+      rmContainer name
+      mysqlStart name, tag
+    end
+
+    def stopContainer(identifier)
+      system( "vagrant ssh db -c 'sudo docker kill #{identifier}'" )
+    end
+
+    def startContainer(identifier)
+      containerStarted = system( "vagrant ssh db -c 'sudo docker start #{identifier}'" )
+      raise Thor::Error "Failed to start container #{identifier}" unless containerStarted
+    end
+
+    def rmContainer(identifier)
+      system( "vagrant ssh db -c 'sudo docker rm #{identifier}'" )
+    end
+
+    def newMysql(name)
+      stopContainer name
+      rmContainer name
+      mysqlStart name
+    end
+end
+
+Dev.start(ARGV)

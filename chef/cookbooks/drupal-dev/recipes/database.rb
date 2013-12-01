@@ -27,3 +27,9 @@ execute "build docker image" do
   cwd "/home/vagrant"
   command 'sudo docker build -t="mysql/base" .'
 end
+
+cookbook_file "/home/vagrant/commit.sh" do
+  owner "vagrant"
+  group "vagrant"
+  mode "0750"
+end
