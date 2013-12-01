@@ -10,6 +10,12 @@ class Dev < Thor
     defaultBuild
   end
 
+  desc "reset", "resets the database to the last build"
+  def reset
+    vagrantUp
+    resetContainer runningContainerName
+  end
+
   private
 
     def vagrantUp
@@ -39,7 +45,6 @@ class Dev < Thor
     end
 
     def tagContainer(name, tag)
-      #system( "vagrant ssh db -c 'sudo docker rmi #{tag}'" )
       stopContainer name
       system( "vagrant ssh db -c 'sudo ./commit.sh  #{name} #{tag}'" )
       rmContainer name
@@ -59,10 +64,21 @@ class Dev < Thor
       system( "vagrant ssh db -c 'sudo docker rm #{identifier}'" )
     end
 
+    def runningContainerName
+      container = `vagrant ssh db -c 'sudo docker ps' | grep /usr/sbin/mysqld`
+      container.match(/(?mi)tcp\s+([a-z]+)/)[1]
+    end
+
     def newMysql(name)
       stopContainer name
       rmContainer name
       mysqlStart name
+    end
+
+    def resetContainer(name)
+      stopContainer name
+      rmContainer name
+      mysqlStart name, name
     end
 end
 
