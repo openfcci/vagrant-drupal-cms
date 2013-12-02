@@ -4,7 +4,7 @@ require "bundler/setup"
 require "thor"
 
 class Dev < Thor
-  desc "up", "starts vagrant and runs a default build"
+  desc "build", "starts vagrant and runs a default build"
   def build
     vagrantUp
     defaultBuild
