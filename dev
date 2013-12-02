@@ -16,6 +16,12 @@ class Dev < Thor
     resetContainer runningContainerName
   end
 
+  desc "up", "Starts up the dev environment and uses the default build if it exists"
+  def up
+    vagrantUp
+    startOrBuild
+  end
+
   private
 
     def vagrantUp
@@ -79,6 +85,25 @@ class Dev < Thor
       stopContainer name
       rmContainer name
       mysqlStart name, name
+    end
+
+    def imageExists(name)
+      images = `vagrant ssh db -c 'sudo docker images'`
+      images.include? name
+    end
+
+    def startOrBuild
+      mysqlStopCurrent
+      mysqlStarted = system( "vagrant ssh db -c 'sudo docker start default'" )
+      imageOrBuild unless mysqlStarted
+    end
+
+    def imageOrBuild
+      if imageExists "default"
+        mysqlStart "default", "default"
+      else
+        defaultBuild
+      end
     end
 end
 
