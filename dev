@@ -30,6 +30,7 @@ class Dev < Thor
     def vagrantUp
       vagrantStatus = system( "vagrant up --provider virtualbox" )
       raise Thor::Error "vagrant failed to start" unless vagrantStatus
+      system( "vagrant ssh -c 'sudo service apache2 start'" )
     end
 
     def mysqlStart(name, image = "mysql/base")
