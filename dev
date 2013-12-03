@@ -25,6 +25,13 @@ class Dev < Thor
     startOrBuild options[:live] ? "live" : "default"
   end
 
+  desc "upgrade", "Runs an upgrade routine on the currently running database container"
+  def upgrade
+    vagrantUp
+    resetContainer runningContainerName
+    upgradeRoutine
+  end
+
   private
 
     def vagrantUp
