@@ -63,7 +63,7 @@ class Dev < Thor
 
     def liveBuild
       newMysql "live"
-      restoreCompleted = system( "vagrant ssh -c './db_util.sh http://dbdump.fccinteractive.com/#{mostRecentDump}'")
+      restoreCompleted = system( "vagrant ssh -c './db_util.sh #{mostRecentDump}'")
       raise Thor::Error "Failed to build the live site" unless restoreCompleted
       tagContainer "live", "live"
       upgradeRoutine
