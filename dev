@@ -18,10 +18,11 @@ class Dev < Thor
     resetContainer runningContainerName
   end
 
+  option :live, :type => :boolean, :desc => "Instead of using the the default build, use the live data"
   desc "up", "Starts up the dev environment and uses the default build if it exists"
   def up
     vagrantUp
-    startOrBuild
+    startOrBuild options[:live] ? "live" : "default"
   end
 
   private
@@ -107,15 +108,16 @@ class Dev < Thor
       images.include? name
     end
 
-    def startOrBuild
+    def startOrBuild(name)
       mysqlStopCurrent
-      mysqlStarted = system( "vagrant ssh db -c 'sudo docker start default'" )
-      imageOrBuild unless mysqlStarted
+      mysqlStarted = system( "vagrant ssh db -c 'sudo docker start #{name}'" )
+      imageOrBuild name unless mysqlStarted
+      upgradeRoutine if (!mysqlStarted and name == "live")
     end
 
-    def imageOrBuild
-      if imageExists "default"
-        mysqlStart "default", "default"
+    def imageOrBuild(name)
+      if imageExists name
+        mysqlStart name, name
       else
         defaultBuild
       end
