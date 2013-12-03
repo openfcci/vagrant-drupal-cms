@@ -4,10 +4,12 @@ require "bundler/setup"
 require "thor"
 
 class Dev < Thor
+  option :live, :type => :boolean, :desc => "Instead of a default build, build the live site"
   desc "build", "starts vagrant and runs a default build"
   def build
     vagrantUp
-    defaultBuild
+    defaultBuild unless options[:live]
+    liveBuild if options[:live]
   end
 
   desc "reset", "resets the database to the last build"
@@ -48,6 +50,19 @@ class Dev < Thor
       buildStatus = system( "vagrant ssh -c './faster_default_build.sh'")
       raise Thor::Error "The build failed" unless buildStatus
       tagContainer "default", "default"
+    end
+
+    def liveBuild
+      newMysql "live"
+      restoreCompleted = system( "vagrant ssh -c './db_util.sh http://dbdump.fccinteractive.com/#{mostRecentDump}'")
+      raise Thor::Error "Failed to build the live site" unless restoreCompleted
+      tagContainer "live", "live"
+      upgradeRoutine
+    end
+
+    def upgradeRoutine
+      upgradeCompleted = system( "vagrant ssh -c 'cd /srv/cms/utilities && ./upgrade_routine.sh'" )
+      raise Thor::Error "Failed to do the upgrade routine" unless upgradeCompleted
     end
 
     def tagContainer(name, tag)
@@ -104,6 +119,11 @@ class Dev < Thor
       else
         defaultBuild
       end
+    end
+
+    def mostRecentDump
+      dumps = `curl http://dbdump.fccinteractive.com`
+      dumps.scan(/(?mi)href="(production\.fccnn\.com[0-9_-]+?\.sql\.gz)"/).last[0]
     end
 end
 
