@@ -7,131 +7,131 @@ class Dev < Thor
   option :live, :type => :boolean, :desc => "Instead of a default build, build the live site"
   desc "build", "starts vagrant and runs a default build"
   def build
-    vagrantUp
-    defaultBuild unless options[:live]
-    liveBuild if options[:live]
+    vagrant_up
+    default_build unless options[:live]
+    live_build if options[:live]
   end
 
   desc "reset", "resets the database to the last build"
   def reset
-    vagrantUp
-    resetContainer runningContainerName
+    vagrant_up
+    reset_container running_container_name
   end
 
   option :live, :type => :boolean, :desc => "Instead of using the the default build, use the live data"
   desc "up", "Starts up the dev environment and uses the default build if it exists"
   def up
-    vagrantUp
-    startOrBuild options[:live] ? "live" : "default"
+    vagrant_up
+    start_or_build options[:live] ? "live" : "default"
   end
 
   desc "upgrade", "Runs an upgrade routine on the currently running database container"
   def upgrade
-    vagrantUp
-    resetContainer runningContainerName
-    upgradeRoutine
+    vagrant_up
+    reset_container running_container_name
+    upgrade_routine
   end
 
   private
 
-    def vagrantUp
-      vagrantStatus = system( "vagrant up --provider virtualbox" )
-      raise Thor::Error "vagrant failed to start" unless vagrantStatus
+    def vagrant_up
+      vagrant_status = system( "vagrant up --provider virtualbox" )
+      raise Thor::Error "vagrant failed to start" unless vagrant_status
       system( "vagrant ssh -c 'sudo service apache2 start'" )
     end
 
-    def mysqlStart(name, image = "mysql/base")
-      mysqlStopCurrent
-      mysqlStatus = system( "vagrant ssh db -c 'sudo docker run -d -name=\"#{name}\" -p 172.16.0.11:3306:3306 #{image}'" )
-      raise Thor::Error "mysql failed to start" unless mysqlStatus
+    def mysql_start(name, image = "mysql/base")
+      mysql_stop_current
+      mysql_status = system( "vagrant ssh db -c 'sudo docker run -d -name=\"#{name}\" -p 172.16.0.11:3306:3306 #{image}'" )
+      raise Thor::Error "mysql failed to start" unless mysql_status
     end
 
-    def mysqlStopCurrent
-      runningContainers = `vagrant ssh db -c 'sudo docker ps' | grep mysqld`
-      containers = runningContainers.scan(/(?mi)^[0-9a-f]+\s/)
+    def mysql_stop_current
+      running_containers = `vagrant ssh db -c 'sudo docker ps' | grep mysqld`
+      containers = running_containers.scan(/(?mi)^[0-9a-f]+\s/)
       containers.each do |container|
-        stopContainer container
+        stop_container container
       end
     end
 
-    def defaultBuild
-      newMysql "default"
-      buildStatus = system( "vagrant ssh -c './faster_default_build.sh'")
-      raise Thor::Error "The build failed" unless buildStatus
-      tagContainer "default", "default"
+    def default_build
+      new_mysql "default"
+      build_status = system( "vagrant ssh -c './faster_default_build.sh'")
+      raise Thor::Error "The build failed" unless build_status
+      tag_container "default", "default"
     end
 
-    def liveBuild
-      newMysql "live"
-      restoreCompleted = system( "vagrant ssh -c './db_util.sh #{mostRecentDump}'")
-      raise Thor::Error "Failed to build the live site" unless restoreCompleted
-      tagContainer "live", "live"
-      upgradeRoutine
+    def live_build
+      new_mysql "live"
+      restore_completed = system( "vagrant ssh -c './db_util.sh #{most_recent_dump}'")
+      raise Thor::Error "Failed to build the live site" unless restore_completed
+      tag_container "live", "live"
+      upgrade_routine
     end
 
-    def upgradeRoutine
-      upgradeCompleted = system( "vagrant ssh -c 'cd /srv/cms/utilities && ./upgrade_routine.sh'" )
-      raise Thor::Error "Failed to do the upgrade routine" unless upgradeCompleted
+    def upgrade_routine
+      upgrade_completed = system( "vagrant ssh -c 'cd /srv/cms/utilities && ./upgrade_routine.sh'" )
+      raise Thor::Error "Failed to do the upgrade routine" unless upgrade_completed
     end
 
-    def tagContainer(name, tag)
-      stopContainer name
+    def tag_container(name, tag)
+      stop_container name
       system( "vagrant ssh db -c 'sudo ./commit.sh  #{name} #{tag}'" )
-      rmContainer name
-      mysqlStart name, tag
+      rm_container name
+      mysql_start name, tag
     end
 
-    def stopContainer(identifier)
+    def stop_container(identifier)
       system( "vagrant ssh db -c 'sudo docker kill #{identifier}'" )
     end
 
-    def startContainer(identifier)
-      containerStarted = system( "vagrant ssh db -c 'sudo docker start #{identifier}'" )
-      raise Thor::Error "Failed to start container #{identifier}" unless containerStarted
+    def start_container(identifier)
+      container_started = system( "vagrant ssh db -c 'sudo docker start #{identifier}'" )
+      raise Thor::Error "Failed to start container #{identifier}" unless container_started
     end
 
-    def rmContainer(identifier)
+    def rm_container(identifier)
       system( "vagrant ssh db -c 'sudo docker rm #{identifier}'" )
     end
 
-    def runningContainerName
+    def running_container_name
       container = `vagrant ssh db -c 'sudo docker ps' | grep /usr/sbin/mysqld`
       container.match(/(?mi)tcp\s+([a-z]+)/)[1]
     end
 
-    def newMysql(name)
-      stopContainer name
-      rmContainer name
-      mysqlStart name
+    def new_mysql(name)
+      stop_container name
+      rm_container name
+      mysql_start name
     end
 
-    def resetContainer(name)
-      stopContainer name
-      rmContainer name
-      mysqlStart name, name
+    def reset_container(name)
+      stop_container name
+      rm_container name
+      mysql_start name, name
     end
 
-    def imageExists(name)
+    def image_exists(name)
       images = `vagrant ssh db -c 'sudo docker images'`
       images.include? name
     end
 
-    def startOrBuild(name)
-      mysqlStopCurrent
-      mysqlStarted = system( "vagrant ssh db -c 'sudo docker start #{name}'" )
-      imageOrBuild name unless mysqlStarted
-      upgradeRoutine if (!mysqlStarted and name == "live")
+    def start_or_build(name)
+      mysql_stop_current
+      mysql_started = system( "vagrant ssh db -c 'sudo docker start #{name}'" )
+      image_or_build name unless mysql_started
+      upgrade_routine if (!mysql_started and name == "live")
     end
 
-    def imageOrBuild(name)
-      if imageExists name
-        mysqlStart name, name
+    def image_or_build(name)
+      if image_exists name
+        mysql_start name, name
       else
-        defaultBuild
+        default_build
       end
     end
 
-    def mostRecentDump
+    def most_recent_dump
       dumps = `curl http://dbdump.fccinteractive.com`
       dumps.scan(/(?mi)href="(production\.fccnn\.com[0-9_-]+?\.sql\.gz)"/).last[0]
     end
