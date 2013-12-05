@@ -8,6 +8,7 @@ class Dev < Thor
   desc "build", "starts vagrant and runs a default build"
   def build
     vagrant_up
+    cc
     default_build unless options[:live]
     live_build if options[:live]
   end
@@ -16,6 +17,7 @@ class Dev < Thor
   def reset
     vagrant_up
     reset_container running_container_name
+    cc
   end
 
   option :live, :type => :boolean, :desc => "Instead of using the the default build, use the live data"
@@ -30,6 +32,12 @@ class Dev < Thor
     vagrant_up
     reset_container running_container_name
     upgrade_routine
+    cc
+  end
+
+  desc "cc", "Clears the cache"
+  def cc
+    system( "vagrant ssh -c 'cd /srv/cms/public_html && drush cc all && sudo service memcached restart'" )
   end
 
   private
