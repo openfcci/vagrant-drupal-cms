@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
-require "rubygems"
-require "bundler/setup"
-require "thor"
+require 'rubygems'
+require 'bundler/setup'
+require 'thor'
 
 class Dev < Thor
-  option :live, :type => :boolean, :desc => "Instead of a default build, build the live site"
-  desc "build", "starts vagrant and runs a default build"
+  option :live, :type => :boolean, :desc => 'Instead of a default build, build the live site'
+  desc 'build', 'starts vagrant and runs a default build'
   def build
     vagrant_up
     cc
@@ -13,21 +13,21 @@ class Dev < Thor
     live_build if options[:live]
   end
 
-  desc "reset", "resets the database to the last build"
+  desc 'reset', 'resets the database to the last build'
   def reset
     vagrant_up
     reset_container running_container_name
     cc
   end
 
-  option :live, :type => :boolean, :desc => "Instead of using the the default build, use the live data"
-  desc "up", "Starts up the dev environment and uses the default build if it exists"
+  option :live, :type => :boolean, :desc => 'Instead of using the the default build, use the live data'
+  desc 'up', 'Starts up the dev environment and uses the default build if it exists'
   def up
     vagrant_up
-    start_or_build options[:live] ? "live" : "default"
+    start_or_build options[:live] ? 'live' : 'default'
   end
 
-  desc "upgrade", "Runs an upgrade routine on the currently running database container"
+  desc 'upgrade', 'Runs an upgrade routine on the currently running database container'
   def upgrade
     vagrant_up
     reset_container running_container_name
@@ -35,7 +35,7 @@ class Dev < Thor
     cc
   end
 
-  desc "cc", "Clears the cache"
+  desc 'cc', 'Clears the cache'
   def cc
     system( "vagrant ssh -c 'cd /srv/cms/public_html && drush cc all && sudo service memcached restart'" )
   end
@@ -43,15 +43,15 @@ class Dev < Thor
   private
 
     def vagrant_up
-      vagrant_status = system( "vagrant up --provider virtualbox" )
-      raise Thor::Error "vagrant failed to start" unless vagrant_status
-      system( "vagrant ssh -c 'sudo service apache2 start'" )
+      vagrant_status = system( 'vagrant up --provider virtualbox' )
+      raise Thor::Error 'vagrant failed to start' unless vagrant_status
+      system( 'vagrant ssh -c \'sudo service apache2 start\'' )
     end
 
-    def mysql_start(name, image = "mysql/base")
+    def mysql_start(name, image = 'mysql/base')
       mysql_stop_current
       mysql_status = system( "vagrant ssh db -c 'sudo docker run -d -name=\"#{name}\" -p 172.16.0.11:3306:3306 #{image}'" )
-      raise Thor::Error "mysql failed to start" unless mysql_status
+      raise Thor::Error 'mysql failed to start' unless mysql_status
     end
 
     def mysql_stop_current
@@ -63,23 +63,23 @@ class Dev < Thor
     end
 
     def default_build
-      new_mysql "default"
-      build_status = system( "vagrant ssh -c './faster_default_build.sh'")
-      raise Thor::Error "The build failed" unless build_status
-      tag_container "default", "default"
+      new_mysql 'default'
+      build_status = system( 'vagrant ssh -c \'./faster_default_build.sh\'')
+      raise Thor::Error 'The build failed' unless build_status
+      tag_container 'default', 'default'
     end
 
     def live_build
-      new_mysql "live"
+      new_mysql 'live'
       restore_completed = system( "vagrant ssh -c './db_util.sh #{most_recent_dump}'")
-      raise Thor::Error "Failed to build the live site" unless restore_completed
-      tag_container "live", "live"
+      raise Thor::Error 'Failed to build the live site' unless restore_completed
+      tag_container 'live', 'live'
       upgrade_routine
     end
 
     def upgrade_routine
       upgrade_completed = system( "vagrant ssh -c 'cd /srv/cms/utilities && ./upgrade_routine.sh'" )
-      raise Thor::Error "Failed to do the upgrade routine" unless upgrade_completed
+      raise Thor::Error 'Failed to do the upgrade routine' unless upgrade_completed
     end
 
     def tag_container(name, tag)
@@ -128,18 +128,15 @@ class Dev < Thor
       mysql_stop_current
       mysql_started = system( "vagrant ssh db -c 'sudo docker start #{name}'" )
       image_or_build name unless mysql_started
-      upgrade_routine if (!mysql_started and name == "live")
+      upgrade_routine if (!mysql_started and name == 'live')
     end
 
     def image_or_build(name)
-      if image_exists name
-        mysql_start name, name
-      else
-        default_build
-      end
+      (image_exists name) ? mysql_start name, name : default_build
     end
 
-    def most_recent_dump
+  # @return [String]
+  def most_recent_dump
       dumps = `curl http://dbdump.fccinteractive.com`
       dumps.scan(/(?mi)href="(production\.fccnn\.com[0-9_-]+?\.sql\.gz)"/).last[0]
     end
