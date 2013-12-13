@@ -137,7 +137,7 @@ class Dev < Thor
     end
 
     def image_or_build(name)
-      (image_exists name) ? mysql_start name, name : default_build
+      (image_exists name) ? (mysql_start name, name) : default_build
     end
 
   # @return [String]
