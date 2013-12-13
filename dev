@@ -84,6 +84,7 @@ class Dev < Thor
 
     def tag_container(name, tag)
       stop_container name
+      rm_image tag
       system( "vagrant ssh db -c 'sudo ./commit.sh  #{name} #{tag}'" )
       rm_container name
       mysql_start name, tag
@@ -100,6 +101,10 @@ class Dev < Thor
 
     def rm_container(identifier)
       system( "vagrant ssh db -c 'sudo docker rm #{identifier}'" )
+    end
+
+    def rm_image(identifier)
+      system( "vagrant ssh db -c 'sudo docker rmi #{identifier}'" )
     end
 
     def running_container_name
