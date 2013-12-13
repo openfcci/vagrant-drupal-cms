@@ -50,7 +50,7 @@ This means that vagrant will still have old baseboxes on your system. To clean t
 1. run `vagrant box list`
 2. You can remove all but the most recent one, run `vagrant box delete <basebox> virtualbox`
 
-[1]:http://downloads.vagrantup.com
+[1]:http://www.vagrantup.com/downloads.html
 [2]:https://www.virtualbox.org/wiki/Downloads
 [3]:http://packer.io
 [4]:https://github.com/openfcci/our-boxen
