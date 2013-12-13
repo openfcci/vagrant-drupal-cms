@@ -10,6 +10,7 @@ xdebug = "Off"
 Vagrant.configure("2") do |config|
   config.vm.box = "fcc-vagrant-11-15-13"
   config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
+  config.ssh.forward_agent = true
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "4096"]
     v.customize ["modifyvm", :id, "--cpus", "1"]

@@ -40,6 +40,15 @@ class Dev < Thor
     system( "vagrant ssh -c 'cd /srv/cms/public_html && drush cc all && sudo service memcached restart'" )
   end
 
+  option :user, :type => :string, :required => true, :desc => 'The user to use to upload to dbdump'
+  option :cached, :type => :boolean, :desc => 'Use the cached container instead of rebuilding it'
+  desc 'upload', 'Builds the current live database and then uploads the resulting image to dbdump'
+  def upload
+    vagrant_up
+    live_build unless options[:cached]
+    export_upload options[:user]
+  end
+
   private
 
     def vagrant_up
@@ -124,6 +133,12 @@ class Dev < Thor
       mysql_start name, name
     end
 
+    def export_container(name)
+      stop_container name
+      export_status = system( "vagrant ssh db -c 'sudo docker export #{name} | gzip --stdout - > #{name}.tar.gz'" )
+      raise Thor::Error "Failed to export container #{name}" unless export_status
+    end
+
     def image_exists(name)
       images = `vagrant ssh db -c 'sudo docker images'`
       images.include? name
@@ -140,10 +155,15 @@ class Dev < Thor
       (image_exists name) ? (mysql_start name, name) : default_build
     end
 
-  # @return [String]
-  def most_recent_dump
+    # @return [String]
+    def most_recent_dump
       dumps = `curl http://dbdump.fccinteractive.com`
       dumps.scan(/(?mi)href="(production\.fccnn\.com[0-9_-]+?\.sql\.gz)"/).last[0]
+    end
+
+    def export_upload(user)
+      export_container "live"
+      upload_status = system("echo \"yes\" | vagrant ssh db -c 'rsync -avh --progress live.tar.gz #{user}@alpha.fccinteractive.com:/var/www/html/dbdump.fccinteractive.com/'")
     end
 end
 
