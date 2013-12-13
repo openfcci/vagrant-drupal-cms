@@ -1,23 +1,37 @@
 ## Install ##
 
-Setup boxen from [https://github.com/openfcci/our-boxen][4] or manually install the requirements:
-
 1. Install [vagrant][1] and [virtualbox][2]. If you're on mavericks it will complain about unsigned kexts when you install virtualbox. It appears to work anyways.
-    - You should not use 4.3, its extremely slow. Use the latest from the 4.2 series.
-2. Install the plugin vagrant-mountcommand `vagrant plugin install vagrant-mountcommand`
-3. Install the plugin vagrant-cachier `vagrant plugin install vagrant-cachier`
-4. You'll need to clone this into the same directory as fcc-drupal-cms. This expects fcc-drupal-cms to be in a directory named fcc-drupal-cms.
+2. You'll need to clone this into the same directory as fcc-drupal-cms. This expects fcc-drupal-cms to be in a directory named fcc-drupal-cms.
+3. cd into the directory
+4. run `sudo gem install bundler`
+5. run `bundle install`
 
+You'll have to manually add the sites to `/etc/hosts` file, the default prefix is `dev` and the ip is `172.16.0.10`.
 
 ## Usage ##
 
 1. Go to the directory where you cloned the repo (~/src if you used boxen)
 2. set up your prefix in the Vagrantfile by changing the value of the `prefix` variable near the top.
-3. run `vagrant up`
+3. run `./dev up` to start up
 
-Once that completes, you'll have a virtual server for the drupal cms running on `172.16.0.10`. If you want to run multiple boxes at once, all you need to do is change the `ip` and `prefix` variables. If you want to connect to the vm use `vagrant ssh` and that will log you in with the vagrant user which has password-less sudo access. You can shut down the vm with `vagrant halt` and delete it with `vagrant delete`. If you want to start the vm after shutting it down just run `vagrant up`, it won't reprovision it. If you want a clean box run `vagrant reload --provision` if your box is currently running. If it isn't running, run `vagrant up --provision` for a clean box.
+Once that completes, you'll have a virtual server for the drupal cms running on `172.16.0.10`.
 
-If you need the live database, move the database dump into the database directroy. then the database dump will be available on the box at `/exports`
+### Live data ###
+
+1. Go to the directory where you cloned the repo
+2. run `./dev build --live`
+    - You will need to be connected to the forum's network to do this as it either has to download a database dump or the built container
+    - This will take a long time
+
+When that completes, you will have a working dev box with the live data. To do an upgrade routine run `./dev upgrade` that will drop the current state and use the database restore from the last time that you ran it. It takes about 15 minutes to run the upgrade routine.
+
+### Other functions ###
+
+- To shut down the dev environment run `vagrant halt`
+- To start up the dev environment run `./dev up`. You can add `--live` to use the live database
+- To do a default build you can run `./dev build`
+- If you wish to reset the database to the last build you can run `./dev reset`
+- To clear the caches run `./dev cc`
 
 ## Xdebug ##
 
