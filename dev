@@ -55,6 +55,7 @@ class Dev < Thor
       vagrant_status = system( 'vagrant up --provider virtualbox' )
       raise Thor::Error 'vagrant failed to start' unless vagrant_status
       system( 'vagrant ssh -c \'sudo service apache2 start\'' )
+      provision if provision_needed
     end
 
     def mysql_start(name, image = 'mysql/base')
@@ -164,6 +165,27 @@ class Dev < Thor
     def export_upload(user)
       export_container "live"
       upload_status = system("echo \"yes\" | vagrant ssh db -c 'rsync -avh --progress live.tar.gz #{user}@alpha.fccinteractive.com:/var/www/html/dbdump.fccinteractive.com/'")
+    end
+
+    def provision
+      system('vagrant provision')
+    end
+
+    def provision_needed
+      prefix = readVagrantfile /(?mi)^prefix = "([a-z0-9]+)"/
+      prefix != prefixInUse
+    end
+
+    def readVagrantfile(regex)
+      File.open('./Vagrantfile', 'r').each_line do |line|
+        value = regex.match(line)
+        return value[1] unless value == nil
+      end
+    end
+
+    def prefixInUse
+      apacheConfig = `vagrant ssh -c 'cat /etc/apache2/sites-enabled/drupal.conf'`
+      /(?mi)ServerName ([a-z0-9]+)\./.match(apacheConfig)[1]
     end
 end
 
