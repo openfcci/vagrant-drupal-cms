@@ -28,8 +28,8 @@ template "/srv/cms/public_html/sites/settings_override/settings.php" do
 end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
-'memcached', 'php5-memcached', 'php5-xdebug', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless'
-].each do |requirement|
+'memcached', 'php5-memcached', 'php5-xdebug', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless',
+'php5-xmlrpc'].each do |requirement|
   package requirement
 end
 
