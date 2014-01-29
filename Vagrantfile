@@ -68,7 +68,6 @@ Vagrant.configure("2") do |config|
         }
       }
     end
-    web.vm.provision :shell, :inline => '/home/vagrant/faster_default_build.sh'
 #    web.vm.mount_commands.command "service apache2 start"
   end
 #  config.cache.auto_detect = true
