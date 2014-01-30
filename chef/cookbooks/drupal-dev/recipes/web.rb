@@ -47,7 +47,7 @@ execute "add-pear.drush.org" do
 end
 
 execute "install-drush" do
-  command "pear install drush/drush"
+  command "pear install drush/drush-5.9.0"
   user "root"
   returns [0,1]
   not_if { File.exists?('/usr/bin/drush') }
