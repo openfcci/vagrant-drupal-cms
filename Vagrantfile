@@ -8,14 +8,14 @@ ip = "172.16.0.10"
 xdebug = "Off"
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "fcc-vagrant-11-15-13"
-  config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "4096"]
     v.customize ["modifyvm", :id, "--cpus", "1"]
     v.name = prefix
   end
   config.vm.define "db" do |db|
+    db.vm.box = "fcc-live-db"
+    db.vm.box_url = "http://dbdump.fccinteractive.com/fcc-live-db.box"
     db.vm.network :forwarded_port, guest: 3306, host: 3307, auto_correct: true
     db.vm.network :private_network, ip: IPAddr.new(ip).succ.to_s
     db.vm.provider "virtualbox" do |v|
@@ -41,6 +41,8 @@ Vagrant.configure("2") do |config|
     end
   end
   config.vm.define "web", primary: true do |web|
+    web.vm.box = "fcc-vagrant-11-15-13"
+    web.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
     web.vm.network :private_network, ip: ip
     web.vm.synced_folder "../fcc-drupal-cms/", "/srv/cms", :nfs => true, :nfs_version => 3
     web.vm.synced_folder "database/", "/exports", :nfs => true, :nfs_version => 3
