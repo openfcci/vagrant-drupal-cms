@@ -33,29 +33,46 @@ end
   package requirement
 end
 
+remote_file "/usr/local/src/drush-5.9.tar.gz" do
+  source "https://github.com/drush-ops/drush/archive/5.9.0.tar.gz"
+  not_if { File.exists?('/usr/bin/drush') }
+  notifies :run, "execute[untar-drush]", :immediately
+end
+
+execute "untar-drush" do
+  command "tar zxvf drush-5.9.tar.gz"
+  user "root"
+  cwd "/usr/local/src"
+  action :nothing
+  notifies :create, "file[/usr/local/src/drush-5.9.0/drush]", :immediately
+end
+
+file "/usr/local/src/drush-5.9.0/drush" do
+  mode "0755"
+  owner "root"
+  group "root"
+  action :nothing
+  notifies :create, "directory[/usr/local/src/drush-5.9.0/lib]", :immediately
+end
+
+directory "/usr/local/src/drush-5.9.0/lib" do
+  mode "0777"
+  owner "root"
+  group "root"
+  action :nothing
+  notifies :create, "link[/usr/bin/drush]", :immediately
+end
+
+link "/usr/bin/drush" do
+  to "/usr/local/src/drush-5.9.0/drush"
+  owner "root"
+  action :nothing
+end
+
 execute "update-pear" do
   command "pear upgrade"
   user "root"
-  not_if { File.exists?('/usr/bin/drush') }
-end
-
-execute "add-pear.drush.org" do
-  command "pear channel-discover pear.drush.org"
-  user "root"
-  returns [0,1]
-  not_if { File.exists?('/usr/bin/drush') }
-end
-
-execute "install-drush" do
-  command "pear install drush/drush-5.9.0"
-  user "root"
-  returns [0,1]
-  not_if { File.exists?('/usr/bin/drush') }
-end
-
-directory "/usr/share/php/drush/lib" do
-  owner 'vagrant'
-  mode '0775'
+  not_if { File.exists?('/etc/php5/apache2/uploadprogress.ini') }
 end
 
 execute "install-upload-progress" do
