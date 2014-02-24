@@ -9,10 +9,11 @@ This branch is an improvement on running the live database. It makes this improv
 ## Usage ##
 
 1. Go to the directory where you cloned the repo
-2. change to this branch `git checkout live-db`
-3. set up your prefix in the Vagrantfile by changing the value of the `prefix` variable near the top.
-4. run `vagrant up`
-5. ssh into the box `vagrant ssh` and run an upgrade routine `cd /srv/cms/utilities && ./upgrade_routine.sh`
+2. If you are currently running vagrant you'll need to remove your current vms `vagrant destroy`
+3. change to this branch `git checkout live-db`
+4. set up your prefix in the Vagrantfile by changing the value of the `prefix` variable near the top.
+5. run `vagrant up`
+6. ssh into the box `vagrant ssh` and run an upgrade routine `cd /srv/cms/utilities && ./upgrade_routine.sh`
 
 Once that completes, you'll have a virtual server for the drupal cms running on `172.16.0.10`. If you want to run multiple boxes at once, all you need to do is change the `ip` and `prefix` variables. If you want to connect to the vm use `vagrant ssh` and that will log you in with the vagrant user which has password-less sudo access. You can shut down the vm with `vagrant halt` and delete it with `vagrant delete`. If you want to start the vm after shutting it down just run `vagrant up`, it won't reprovision it. If you want a clean build run `vagrant destroy db && vagrant up --provider virtualbox` and then run the upgrade routine again.
 
