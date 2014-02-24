@@ -1,10 +1,10 @@
 {
     "builders": [
         {
-            "type": "virtualbox",
-            "disk_size": "30000",
-            "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.3-server-amd64.iso",
-            "iso_checksum": "61d5e67c70d97b33c13537461a0b153b41304ef412bb0e9d813bb157068c3c65",
+            "type": "virtualbox-iso",
+            "disk_size": "40000",
+            "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.4-server-amd64.iso",
+            "iso_checksum": "3aeb42816253355394897ae80d99a9ba56217c0e98e05294b51f0f5b13bceb54",
             "iso_checksum_type": "sha256",
             "boot_wait": "5s",
             "boot_command": [
@@ -36,7 +36,7 @@
             "type": "shell",
             "script": "scripts/update.sh",
             "override": {
-              "virtualbox": {
+              "virtualbox-iso": {
                 "execute_command": "echo 'vagrant'| {{.Vars}} sudo -E -S bash '{{.Path}}'"
               }
             }
@@ -49,7 +49,7 @@
               "scripts/chef.sh"
             ],
             "override": {
-                "virtualbox": {
+                "virtualbox-iso": {
                     "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
                 }
             }
@@ -76,7 +76,7 @@
             "type": "shell",
             "script": "scripts/db_prep.sh",
             "override": {
-                "virtualbox": {
+                "virtualbox-iso": {
                     "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
                 }
             }
@@ -85,7 +85,7 @@
             "type": "shell",
             "script": "scripts/db_setup.rb",
             "override": {
-                "virtualbox": {
+                "virtualbox-iso": {
                     "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S ruby '{{.Path}}'"
                 }
             }
@@ -97,7 +97,7 @@
               "scripts/vm_cleanup.sh"
             ],
             "override": {
-                "virtualbox": {
+                "virtualbox-iso": {
                     "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
                 }
             }
