@@ -49,8 +49,8 @@ Vagrant.configure("2") do |config|
       v.customize ["modifyvm", :id, "--memory", "2048"]
       v.name = prefix + "web"
     end
-    web.vm.provision "shell", inline: "mkdir -p /srv/cms/wwwconfig"
-    web.vm.provision "shell", inline: "mkdir -p /srv/cms/public_html/sites/settings_override"
+    web.vm.provision "shell", inline: "mkdir -p /srv/cms/wwwconfig && chown -R vagrant:vagrant /srv/cms/wwwconfig"
+    web.vm.provision "shell", inline: "mkdir -p /srv/cms/public_html/sites/settings_override && chown -R vagrant:vagrant /srv/cms/public_html/sites/settings_override"
     web.vm.provision "chef_solo" do |chef|
       chef.add_recipe "drupal-dev::web"
       chef.cookbooks_path = "chef/cookbooks"
