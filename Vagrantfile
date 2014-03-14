@@ -7,6 +7,7 @@ prefix = "dev"
 ip = "172.16.0.10"
 xdebug = "Off"
 
+Vagrant.require_version ">= 1.5.0"
 Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "4096"]
@@ -44,14 +45,13 @@ Vagrant.configure("2") do |config|
     web.vm.box = "fcc-vagrant-11-15-13"
     web.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
     web.vm.network :private_network, ip: ip
-    web.vm.synced_folder "../fcc-drupal-cms/", "/srv/cms", :nfs => true, :nfs_version => 3
-    web.vm.synced_folder "database/", "/exports", :nfs => true, :nfs_version => 3
-    web.vm.synced_folder "wwwconfig/", "/srv/cms/wwwconfig", :nfs => true
-    web.vm.synced_folder "settings_override/", "/srv/cms/public_html/sites/settings_override", :nfs => true
+    web.vm.synced_folder "../fcc-drupal-cms/", "/srv/cms", type: "rsync", rsync__exclude: [".git/", ".idea/", "wwwconfig/", "public_html/sites/settings_override/"]
     web.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--memory", "2048"]
       v.name = prefix + "web"
     end
+    web.vm.provision "shell", inline: "mkdir -p /srv/cms/wwwconfig"
+    web.vm.provision "shell", inline: "mkdir -p /srv/cms/public_html/sites/settings_override"
     web.vm.provision "chef_solo" do |chef|
       chef.add_recipe "drupal-dev::web"
       chef.cookbooks_path = "chef/cookbooks"
