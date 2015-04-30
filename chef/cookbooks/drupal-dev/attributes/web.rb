@@ -3,5 +3,5 @@ default['drupal']['xdebug']['enabled'] = 'Off'
 default['drupal']['xdebug']['host']='10.0.2.2'
 default['drupal']['xdebug']['port']=''
 default['drupal']['xdebug']['remote_autostart']='1'
-
+override['apache']['mpm'] = 'prefork'
 default['drupal']['db']['host'] = '127.0.0.1'
