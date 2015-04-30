@@ -28,7 +28,7 @@ template "/srv/cms/public_html/sites/settings_override/settings.php" do
 end
 
 ['php5', 'php5-mysql', 'php5-gd', 'php-pear', 'php5-dev', 'php5-curl', 'php5-ldap',
-'memcached', 'php5-memcached', 'php5-xdebug', 'imagemagick', 'php-apc', 'openjdk-7-jre-headless',
+'memcached', 'php5-memcached', 'php5-xdebug', 'imagemagick', 'openjdk-7-jre-headless',
 'php5-xmlrpc'].each do |requirement|
   package requirement
 end
@@ -95,13 +95,6 @@ template "/etc/apache2/sites-enabled/drupal.conf" do
   notifies :restart, "service[apache2]", :delayed
 end
 
-cookbook_file "/etc/php5/conf.d/apc.ini" do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  notifies :restart, "service[apache2]", :delayed
-end
-
 cookbook_file "/etc/php5/apache2/php.ini" do
   owner 'root'
   group 'root'
@@ -109,7 +102,14 @@ cookbook_file "/etc/php5/apache2/php.ini" do
   notifies :restart, "service[apache2]", :delayed
 end
 
-cookbook_file "/etc/php5/conf.d/uploadprogress.ini" do
+cookbook_file "/etc/php5/apache2/uploadprogress.ini" do
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :restart, "service[apache2]", :delayed
+end
+
+cookbook_file "/etc/php5/cli/uploadprogress.ini" do
   owner 'root'
   group 'root'
   mode '0644'
@@ -122,7 +122,7 @@ cookbook_file "/etc/profile.d/drush.sh" do
   mode '755'
 end
 
-template "/etc/php5/conf.d/xdebug.ini" do
+template "/etc/php5/apache2/xdebug.ini" do
   owner 'root'
   group 'root'
   mode '0644'

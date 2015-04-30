@@ -8,8 +8,9 @@ ip = "172.16.0.10"
 xdebug = "Off"
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "fcc-vagrant-11-15-13"
-  config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
+  config.vm.box = "fcc-vagrant-04-30-15"
+  config.vm.box_url = "packer/fcc-vagrant.box"
+  #config.vm.box_url = "http://dbdump.fccinteractive.com/fcc-vagrant.box"
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", "4096"]
     v.customize ["modifyvm", :id, "--cpus", "1"]
